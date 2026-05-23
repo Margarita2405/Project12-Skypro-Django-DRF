@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import CustomUser
+from .serializers import UserProfileSerializer
 
-# Create your views here.
+
+class UserProfileAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    queryset = CustomUser.objects.all()
