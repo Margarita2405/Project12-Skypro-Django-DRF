@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Course(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название курса", help_text="Введите название курса")
@@ -11,6 +13,14 @@ class Course(models.Model):
         help_text="Загрузите превью(картинку",
     )
     description = models.TextField(blank=True, null=True, verbose_name="Описание курса", help_text="Введите описание")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="courses",
+        verbose_name="Владелец",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = "Курс"
@@ -35,6 +45,14 @@ class Lesson(models.Model):
 
     # Связь с курсом: один курс — много уроков
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="Курс")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="lessons",
+        verbose_name="Владелец",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = "Урок"
