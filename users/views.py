@@ -1,11 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, filters, permissions
+from rest_framework import filters, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 
 from .filters import PaymentFilter
-from .models import CustomUser,Payment
+from .models import CustomUser, Payment
 from .permissions import IsOwnerProfile
-from .serializers import UserProfileSerializer, PaymentSerializer, UserCreateSerializer, UserPublicProfileSerializer
+from .serializers import PaymentSerializer, UserCreateSerializer, UserProfileSerializer, UserPublicProfileSerializer
 
 
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):
@@ -21,7 +21,7 @@ class UserProfileAPIView(generics.RetrieveUpdateAPIView):
 
     def get_permissions(self):
         # Для GET (просмотр) – разрешаем всем авторизованным
-        if self.request.method == 'GET':
+        if self.request.method == "GET":
             self.permission_classes = [IsAuthenticated]
         # Для PUT/PATCH – разрешаем только владельцу
         else:
@@ -38,12 +38,13 @@ class PaymentListAPIView(generics.ListAPIView):
     queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = PaymentFilter
-    ordering_fields = ['payment_date']
-    ordering = ['-payment_date'] # по умолчанию сначала новые
+    ordering_fields = ["payment_date"]
+    ordering = ["-payment_date"]  # по умолчанию сначала новые
 
 
 class UserCreateAPIView(generics.CreateAPIView):
     """Регистрация нового пользователя. Доступен без аутентификации."""
+
     queryset = CustomUser.objects.all()
     serializer_class = UserCreateSerializer
-    permission_classes = [permissions.AllowAny]   # открытый доступ
+    permission_classes = [permissions.AllowAny]  # открытый доступ
