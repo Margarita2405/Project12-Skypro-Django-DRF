@@ -39,6 +39,14 @@ class CourseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    # Обновление курса
+    def perform_update(self, serializer, send_course_update_email=None):
+        course = serializer.save()
+        subscribers = Subscription.objects.filter(course=course).select_related('user')
+        emails = [sub.user.email for sub in subscribers if sub.user.email]
+        if emails:
+            send_course_update_email.delay(course.id, emails)
+
 
 # CRUD для Уроков через Generics
 class LessonListAPIView(generics.ListAPIView):
