@@ -25,6 +25,8 @@ SPA-приложений.
 - Pillow (для работы с изображениями)
 - python-dotenv
 - Poetry (управление зависимостями)
+- Docker (версия 20.10+)
+- Docker Compose
 
 ## Установка и запуск
 
@@ -45,38 +47,82 @@ SECRET_KEY=your_secret_key_here
 
 DEBUG=True
 
-# НАСТРОЙКИ ПОДКЛЮЧЕНИЯ К PostgreSQL
+# База данных (для Django)
 DATABASE_NAME=django_drf
-DATABASE_USER=your_user_name
-DATABASE_PASSWORD=your_password
-DATABASE_HOST=localhost
+DATABASE_USER=postgres
+DATABASE_PASSWORD=your_db_password
+DATABASE_HOST=db
 DATABASE_PORT=5432
+
+# Для контейнера PostgreSQL
+POSTGRES_DB=django_drf
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your_db_password
+
+# Redis (для Celery)
+REDIS_URL=redis://redis:6379/0
 
 # GITHUB TOKEN
 # Personal Access Token для GitHub
 # Создайте на: https://github.com/settings/tokens
 # Необходимые scope: repo, read:org, user (в зависимости от нужд)
 GITHUB_TOKEN=your_github_token_here
+
+# Stripe (если используется)
+STRIPE_API_KEY=your_stripe_test_key
+STRIPE_API_URL=https://api.stripe.com
 ```
 
-### 4. Создайте и примените миграции
+### 4. Запустите все сервисы
 
 ```
-python manage.py makemigrations
-python manage.py migrate
+docker-compose up --build
+```
+Эта команда соберёт образ, запустит контейнеры Django, PostgreSQL и Redis.
+
+### 5. Примените миграции
+
+```
+docker-compose exec web python manage.py migrate
 ```
 
-### 5. Создайте суперпользователя
+### 6. Создайте суперпользователя
 
 ```
-python manage.py createsuperuser
+docker-compose exec web python manage.py createsuperuser
 ```
 
-### 6. Запуск сервера разработки
+### 7. Соберите статические файлы (если необходимо):
+
 ```
-python manage.py runserver
-Проект будет доступен по адресу: http://127.0.0.1:8000
+docker-compose exec web python manage.py collectstatic --noinput
 ```
+
+### Доступ к приложению
+
+Веб-приложение: http://localhost:8000
+Админ-панель: http://localhost:8000/admin
+API документация (если настроена): http://localhost:8000/swagger/ или http://localhost:8000/redoc/
+
+### Остановка сервисов
+
+```
+docker-compose down
+```
+## Для полной очистки томов (удаления данных БД и Redis):
+
+```
+docker-compose down -v
+```
+
+### Разработка
+Код монтируется в контейнер, поэтому изменения в локальных файлах будут автоматически отслеживаться сервером
+(при использовании runserver). Если вы добавили новую зависимость, пересоберите образ:
+
+```
+docker-compose up --build
+```
+
 ## API Эндпоинты
 
 **Курсы (ViewSet)**
@@ -128,9 +174,6 @@ json
 }
 ```
 
-## Админ-панель
-
-Админка доступна по адресу /admin/. В ней можно управлять пользователями, курсами, уроками.
 
 ## Статические и медиа-файлы
 
