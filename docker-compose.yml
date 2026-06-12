@@ -1,33 +1,27 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
-      - static_volume:/code/static
+      - static_volume:/app/static
+      - media_volume:/app/media
     ports:
       - "8000:8000"
     depends_on:
       - db
       - redis
     env_file:
-      - ./.env
-    environment:
-      - DATABASE_HOST=db
-      - REDIS_URL=redis://redis:6379/0
+      - .env
+    restart: always
 
   db:
     image: postgres:16
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ./.env
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - .env
     expose:
       - "5432"
+    restart: always
 
   redis:
     image: redis:7-alpine
@@ -35,8 +29,10 @@ services:
       - redis_data:/data
     expose:
       - "6379"
+    restart: always
 
 volumes:
   postgres_data:
   static_volume:
+  media_volume:
   redis_data:
