@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 from users.models import CustomUser
 
+
 @shared_task
 def deactivate_inactive_users():
     month_ago = timezone.now() - timedelta(days=30)
