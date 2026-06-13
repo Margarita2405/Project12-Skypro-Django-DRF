@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = "/app/static"
+STATIC_ROOT = "/app/staticfiles"
 
 
 # Медиатека (Media)
