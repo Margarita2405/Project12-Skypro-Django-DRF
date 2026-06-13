@@ -53,7 +53,7 @@ jobs:
           poetry env use $(which python)
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --sync --no-root
 
       - name: Run migrations
         env:
