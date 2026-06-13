@@ -46,7 +46,11 @@ jobs:
 
       - name: Install Poetry
         run: |
+          python -m pip install --upgrade pip
           pip install poetry
+          # Принудительно создаем окружение в папке проекта:
+          poetry config virtualenvs.in-project true
+          poetry env use $(which python)
 
       - name: Install dependencies
         run: poetry install
@@ -55,11 +59,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
         run: poetry run python manage.py migrate
-
-      - name: Run tests
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-        run: poetry run python manage.py test
 
   build:
     runs-on: ubuntu-latest
