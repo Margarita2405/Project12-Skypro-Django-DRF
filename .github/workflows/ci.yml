@@ -25,6 +25,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: lint
+    # Указываем GitHub Actions заходить в папку проекта для всех шагов этой джобы
+    defaults:
+      run:
+        working-directory: Project12-Skypro-Django-DRF
     services:
       postgres:
         image: postgres:16
