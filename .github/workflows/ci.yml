@@ -56,6 +56,11 @@ jobs:
 
       - name: Run migrations
         env:
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_NAME: postgres
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DEBUG: "True"
           STRIPE_API_URL: "https://stripe.com"
@@ -68,6 +73,11 @@ jobs:
 
       - name: Run tests
         env:
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_NAME: postgres
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DEBUG: "True"
           STRIPE_API_URL: "https://stripe.com"
