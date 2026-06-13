@@ -57,11 +57,25 @@ jobs:
       - name: Run migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DEBUG: "True"
+          STRIPE_API_URL: "https://stripe.com"
+          ADMIN_EMAIL: "admin.drf@example.ru"
+          # БЕЗОПАСНО: Подтягиваем секреты из хранилища GitHub
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: poetry run python manage.py migrate
 
       - name: Run tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DEBUG: "True"
+          STRIPE_API_URL: "https://stripe.com"
+          ADMIN_EMAIL: "admin.drf@example.ru"
+          # БЕЗОПАСНО: Подтягиваем секреты из хранилища GitHub
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: poetry run python manage.py test
 
   build:
